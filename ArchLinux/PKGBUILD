@@ -1,0 +1,184 @@
+#Maintainer: Sonic-Y3k <sonic.y3k@googlemail.com>
+
+pkgname=plexnewtranscoder-nvenc
+pkgver=2.5
+pkgrel=1
+pkgdesc='Complete solution to record, convert and stream audio and video'
+arch=('i686' 'x86_64')
+url='http://ffmpeg.org/'
+license=('GPL3')
+depends=('gnutls' 'libass' 'libva' 'libvdpau' 'opus' 'libvorbis.so'
+         'libvorbisenc.so' 'libx264.so' 'libx265.so' 'rtmpdump'
+         'zvbi')
+makedepends=('hardening-wrapper' 'libvdpau' 'nvidia-sdk' 'yasm')
+provides=('ffmpeg')
+source=('http://files.plexapp.com/elan/ffmpeg/PlexNewTranscoder.tar.bz2'
+        'plex_nvenc.patch')
+sha256sums=('649b41eb71fe3fdde388c678847b969a601124ce5fdf7e8985fae9c08e19b434'
+            'd3337854e205048fcb3859fb93312c857c294b068554cdca834e72caef275b7b')
+
+prepare() {
+  cd "${srcdir}"
+  patch -p0 < "${srcdir}/plex_nvenc.patch"
+  chmod +x "${srcdir}/ffmpeg-snapshot/version.sh"
+}
+
+build() {
+  cd ffmpeg-snapshot
+
+  CFLAGS="-I/usr/include/nvidia-sdk -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include" \
+  ./configure \
+    --prefix=/usr \
+    --disable-bzlib \
+    --disable-ffplay \
+    --disable-ffserver \
+    --disable-ffprobe \
+    --disable-avdevice \
+    --disable-vda \
+    --disable-debug \
+    --disable-doc \
+    --disable-shared \
+    --pkg-config-flags=--static \
+    --arch=$CARCH \
+    --enable-muxers \
+    --enable-gpl \
+    --enable-version3 \
+    --enable-gnutls \
+    --enable-nvenc \
+    --enable-libx264 \
+    --enable-libx265 \
+    --disable-decoders \
+    --enable-libass \
+    --enable-librtmp \
+    --disable-devices \
+    --disable-lzma \
+    --disable-iconv \
+    --disable-protocol=concat \
+    --enable-libzvbi \
+    --enable-libvorbis \
+    --enable-libopus \
+    --enable-decoder=ac3 \
+    --enable-decoder=dca \
+    --enable-decoder=truehd \
+    --enable-decoder=h264 \
+    --enable-decoder=png \
+    --enable-decoder=apng \
+    --enable-decoder=bmp \
+    --enable-decoder=mjpeg \
+    --enable-decoder=thp \
+    --enable-decoder=gif \
+    --enable-decoder=dirac \
+    --enable-decoder=ffv1 \
+    --enable-decoder=ffvhuff \
+    --enable-decoder=huffyuv \
+    --enable-decoder=rawvideo \
+    --enable-decoder=zero12v \
+    --enable-decoder=ayuv \
+    --enable-decoder=r210 \
+    --enable-decoder=v210 \
+    --enable-decoder=v210x \
+    --enable-decoder=v308 \
+    --enable-decoder=v408 \
+    --enable-decoder=v410 \
+    --enable-decoder=y41p \
+    --enable-decoder=yuv4 \
+    --enable-decoder=ansi \
+    --enable-decoder=alac \
+    --enable-decoder=flac \
+    --enable-decoder=vorbis \
+    --enable-decoder=opus \
+    --enable-decoder=pcm_f32be \
+    --enable-decoder=pcm_f32le \
+    --enable-decoder=pcm_f64be \
+    --enable-decoder=pcm_f64le \
+    --enable-decoder=pcm_lxf \
+    --enable-decoder=pcm_s16be \
+    --enable-decoder=pcm_s16be_planar \
+    --enable-decoder=pcm_s16le \
+    --enable-decoder=pcm_s16le_planar \
+    --enable-decoder=pcm_s24be \
+    --enable-decoder=pcm_s24le \
+    --enable-decoder=pcm_s24le_planar \
+    --enable-decoder=pcm_s32be \
+    --enable-decoder=pcm_s32le \
+    --enable-decoder=pcm_s32le_planar \
+    --enable-decoder=pcm_s8 \
+    --enable-decoder=pcm_s8_planar \
+    --enable-decoder=pcm_u16be \
+    --enable-decoder=pcm_u16le \
+    --enable-decoder=pcm_u24be \
+    --enable-decoder=pcm_u24le \
+    --enable-decoder=pcm_u32be \
+    --enable-decoder=pcm_u32le \
+    --enable-decoder=pcm_u8 \
+    --enable-decoder=pcm_alaw \
+    --enable-decoder=pcm_mulaw \
+    --enable-decoder=ass \
+    --enable-decoder=dvbsub \
+    --enable-decoder=dvdsub \
+    --enable-decoder=pgssub \
+    --enable-decoder=jacosub \
+    --enable-decoder=microdvd \
+    --enable-decoder=movtext \
+    --enable-decoder=mpl2 \
+    --enable-decoder=pjs \
+    --enable-decoder=realtext \
+    --enable-decoder=sami \
+    --enable-decoder=ssa \
+    --enable-decoder=stl \
+    --enable-decoder=subrip \
+    --enable-decoder=subviewer \
+    --enable-decoder=text \
+    --enable-decoder=vplayer \
+    --enable-decoder=webvtt \
+    --enable-decoder=xsub \
+    --enable-decoder=libzvbi_teletext \
+    --enable-encoder=flac \
+    --enable-encoder=alac \
+    --enable-encoder=libvorbis \
+    --enable-encoder=libopus \
+    --enable-encoder=mjpeg \
+    --enable-encoder=ass \
+    --enable-encoder=dvbsub \
+    --enable-encoder=dvdsub \
+    --enable-encoder=movtext \
+    --enable-encoder=ssa \
+    --enable-encoder=subrip \
+    --enable-encoder=webvtt \
+    --enable-encoder=xsub \
+    --enable-encoder=pcm_f32be \
+    --enable-encoder=pcm_f32le \
+    --enable-encoder=pcm_f64be \
+    --enable-encoder=pcm_f64le \
+    --enable-encoder=pcm_s8 \
+    --enable-encoder=pcm_s8_planar \
+    --enable-encoder=pcm_s16be \
+    --enable-encoder=pcm_s16be_planar \
+    --enable-encoder=pcm_s16le \
+    --enable-encoder=pcm_s16le_planar \
+    --enable-encoder=pcm_s24be \
+    --enable-encoder=pcm_s24le \
+    --enable-encoder=pcm_s24le_planar \
+    --enable-encoder=pcm_s32be \
+    --enable-encoder=pcm_s32le \
+    --enable-encoder=pcm_s32le_planar \
+    --enable-encoder=pcm_u8 \
+    --enable-encoder=pcm_u16be \
+    --enable-encoder=pcm_u16le \
+    --enable-encoder=pcm_u24be \
+    --enable-encoder=pcm_u24le \
+    --enable-encoder=pcm_u32be \
+    --enable-encoder=pcm_u32le \
+    --extra-libs='-lgcrypt -lgpg-error -ldl' \
+    --enable-nonfree
+
+  make
+}
+
+package() {
+  cd ffmpeg-snapshot
+
+  make DESTDIR="${pkgdir}" install install-man
+}
+
+# vim: ts=2 sw=2 et:
