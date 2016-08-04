@@ -8,6 +8,7 @@ Since the public available sources of the plex transcoder are based on ffmpeg 2.
  * This is Linux only
  * Make sure you have the nvidia-sdk and cuda installed
  * The wrapper needs to be reinstalled after every plex update
+ * The nvidia sdk only allows 2 jobs at once.
 
 ## Installation
 
