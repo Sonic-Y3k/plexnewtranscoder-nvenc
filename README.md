@@ -7,6 +7,7 @@ Since the public available sources of the plex transcoder are based on ffmpeg 2.
  * This was made in ArchLinux you most probably have to change any paths depending on your distro
  * This is Linux only
  * Make sure you have the nvidia-sdk and cuda installed
+ * The wrapper needs to be reinstalled after every plex update
 
 ## Installation
 
